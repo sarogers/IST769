@@ -14,6 +14,14 @@ Project Organization
     │   ├── interim        <- Intermediate data that has been transformed.
     │   ├── processed      <- The final, canonical data sets for modeling.
     │   └── raw            <- The original, immutable data dump.
+    ├── database
+    │   ├── Casandra       <- Docker image for casandra.
+    │   ├── hadoop         <- Docker image for hadoop
+    │   ├── kafka          <- Docker image for kafka
+    │   └── mongodb        <- Docker image for mongodb.
+    |   ├── mssql          <- Docker image for mssql
+    │   ├── redis          <- Docker image for redis
+    │   └── other          <- Docker image for other db.
     │
     ├── docs               <- A default Sphinx project; see sphinx-doc.org for details
     │
