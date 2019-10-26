@@ -6,7 +6,7 @@ c.	Add two players to the players table. Mary and Sue initialize the players wit
 
 **/
 
-USE[fudgemart_v3]
+USE[demo]
 
 GO
 IF OBJECT_ID('dbo.shots') IS NOT NULL
@@ -65,26 +65,17 @@ CREATE PROCEDURE dbo.write_shot(
 	@shot_made bit
 	)
 AS
-BEGIN TRY
 	BEGIN TRANSACTION
-
 	INSERT dbo.shots (player_id, clock_time, shot_made)
 	VALUES (@player_id, @clock_time,@shot_made);
-	IF @@rowcount <> 1 THROW 301,'error inserting data into shots table';
 
 	UPDATE dbo.players
 		SET shots_attemted = COALESCE (shots_attemted, 0) + 1,
 			shots_made = CASE @shot_made WHEN 1 THEN COALESCE (shots_made, 0) + 1
 							ELSE  shots_made END
 	WHERE player_id = @player_id
-	IF @@rowcount <> 1 THROW 302, 'Failed to insert into players';
 
 	COMMIT TRANSACTION
-END TRY
-BEGIN CATCH
-	Print "Error in transaction"
-	ROLLBACK
-END CATCH
 
 GO
 
