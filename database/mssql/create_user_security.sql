@@ -42,5 +42,22 @@ SELECT id, name, price, JSON_QUERY(reviews) as Reviews FROM products FOR JSON AU
 
 GO
 
+-- Column store index
+-- clustered and non-clustered
+GO
+CREATE [CLUSTERED | NONCLUSTERED] 
+		COLUMNSTORE INDEX index_name
+	ON table_name (column,[_])
+
+GO
+--demo
+CREATE nonclustered columnstore index ix_fudgmart_orders_col_clus 
+	ON fudgemart_orders (ship_via, customer_id)
+----------------------------------------------------------------
+--WITH (drop existing = on)
+GO
+
+--Index View
+
 
 

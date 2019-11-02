@@ -65,17 +65,28 @@ CREATE PROCEDURE dbo.write_shot(
 	@shot_made bit
 	)
 AS
+BEGIN TRY
 	BEGIN TRANSACTION
 	INSERT dbo.shots (player_id, clock_time, shot_made)
-	VALUES (@player_id, @clock_time,@shot_made);
+	VALUES (@player_id, @clock_time,@shot_made)
+	if @@ROWCOUNT <> 1 THROW 50005, 'Failed to update shots table, zero rows affected',0;
+	
 
 	UPDATE dbo.players
 		SET shots_attemted = COALESCE (shots_attemted, 0) + 1,
 			shots_made = CASE @shot_made WHEN 1 THEN COALESCE (shots_made, 0) + 1
 							ELSE  shots_made END
 	WHERE player_id = @player_id
+	if @@ROWCOUNT <> 1 THROW 50006,'Failed to insert into player table, zero rows affected',0;
 
-	COMMIT TRANSACTION
+	COMMIT 
+END TRY
+BEGIN CATCH
+	select  error_number() as error, error_message() as message 
+	print 'Rolling back'
+	rollback
+
+END CATCH
 
 GO
 
@@ -109,22 +120,10 @@ of the 5-minute period.
 **/
 GO
 
-EXEC dbo.write_shot 2, '2019/10/19 11:00:00',1;
-EXEC dbo.write_shot 1, '2019/10/19 11:10:00',0;
-EXEC dbo.write_shot 2, '2019/10/19 11:00:00',0;
-EXEC dbo.write_shot 1, '2019/10/19 11:10:00',0;
-EXEC dbo.write_shot 2, '2019/10/19 11:00:00', 1;
-EXEC dbo.write_shot 1, '2019/10/19 11:00:01',1;
-EXEC dbo.write_shot 2, '2019/10/19 11:00:02',0;
-EXEC dbo.write_shot 1, '2019/10/19 11:01:02',1;
-EXEC dbo.write_shot 2, '2019/10/19 11:01:20',1;
-EXEC dbo.write_shot 1, '2019/10/19 11:02:00',0;
-EXEC dbo.write_shot 2, '2019/10/19 11:02:05',0;
-EXEC dbo.write_shot 1, '2019/10/19 11:03:00',0;
-EXEC dbo.write_shot 2, '2019/10/19 11:03:20', 1;
-EXEC dbo.write_shot 1, '2019/10/19 11:04:30',1;
-EXEC dbo.write_shot 2, '2019/10/19 11:05:40',0;
-EXEC dbo.write_shot 1, '2019/10/19 11:05:50',1;
+EXEC dbo.write_shot 2, SYSTEM_TIME ,1;
+WAITFOR DELAY '00:00:05';
+EXEC dbo.write_shot 1, SYSTEM_TIME ,0;
+
 GO
 
 SELECT * FROM dbo.players
@@ -139,20 +138,6 @@ b.	The player statistics exactly 2 minutes and 30 seconds into the period.
 c.	The player statistics in the last minute of the period.
 
 **/
-
-SELECT *
-	FROM dbo.players
-	FOR SYSTEM_TIME  BETWEEN '2019-10-19 11:00:00' AND '2019-10-19 11:05:00'
-GO
-
-SELECT *
-	FROM dbo.players
-	FOR SYSTEM_TIME  BETWEEN '2019-10-19 11:00:00' AND '2019-10-19 11:00:30'
-GO
-SELECT *
-	FROM dbo.players
-	FOR SYSTEM_TIME  BETWEEN '2019-10-19 11:05:00' AND '2019-10-19 11:05:00'
-
 GO
 
 
@@ -170,4 +155,3 @@ SELECT *
 	FOR SYSTEM_TIME  BETWEEN '2019-10-19 11:05:00.0000000' AND '2019-10-19 11:05:00.0000000'
 
 GO
-
