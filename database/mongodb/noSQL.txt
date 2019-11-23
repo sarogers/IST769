@@ -1,0 +1,43 @@
+-- MongoDB
+use database
+show collections
+db.collection.insert(jsonData)
+db.collection.find()
+
+mongo "mongodb+srv://cluster0-g9uvy.mongodb.net/test" --username toraaglobal
+
+mongorestore --host Cluster0-shard-0/cluster0-shard-00-00-g9uvy.mongodb.net:27017,cluster0-shard-00-01-g9uvy.mongodb.net:27017,cluster0-shard-00-02-g9uvy.mongodb.net:27017 --ssl --username toraaglobal --password <PASSWORD> --authenticationDatabase admin 
+
+mongodump --host Cluster0-shard-0/cluster0-shard-00-00-g9uvy.mongodb.net:27017,cluster0-shard-00-01-g9uvy.mongodb.net:27017,cluster0-shard-00-02-g9uvy.mongodb.net:27017 --ssl --username toraaglobal --password <PASSWORD> --authenticationDatabase admin --db <DATABASE>
+
+
+mongoimport --host Cluster0-shard-0/cluster0-shard-00-00-g9uvy.mongodb.net:27017,cluster0-shard-00-01-g9uvy.mongodb.net:27017,cluster0-shard-00-02-g9uvy.mongodb.net:27017 --ssl --username toraaglobal --password aotasa99 --authenticationDatabase admin --db demo --collection countries --type jsonArray --file europe.json
+
+mongoexport --host Cluster0-shard-0/cluster0-shard-00-00-g9uvy.mongodb.net:27017,cluster0-shard-00-01-g9uvy.mongodb.net:27017,cluster0-shard-00-02-g9uvy.mongodb.net:27017 --ssl --username toraaglobal --password <PASSWORD> --authenticationDatabase admin --db <DATABASE> --collection <COLLECTION> --type <FILETYPE> --out <FILENAME>
+
+
+
+
+
+
+--query
+db.collection.find(query, [columns])
+
+
+--index 
+db.collection.createIndex(colA:1, colB:2)  #multi columns index
+db.collection.createIndex(coumnName:1)
+
+--Redis
+
+
+
+
+
+
+
+
+
+
+
+

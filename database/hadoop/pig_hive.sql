@@ -138,6 +138,41 @@ AS SELECT * FROM customers
 STORE customer_projection INTO 'customers' USING org.apache.hive.hcatalog.pig.HCatStorer();
 
 
+###################################################################################################
+
+###################################################################################################
+
+--Impala
+impala-shell
+-- oozie
+-- hbase
+-- spark
+-- solr
+-- kafka 
+-- sqoop
+--flumes
+
+
+
+--Hbase
+create table_name tcolumn_family_name;
+
+--external table in hive pointing to hbase customer table
+create external table customer_hbase ( key int, street string, city string, state string, country string) 
+stored by 'org.apache.hadoop.hive.hbase.HBaseStorageHandler' 
+WITH SERDERPROPERTIES("hbase.columns.mapping" = "address:street,address:city,address:state,address:country")
+TBLPROPERTIES("hbase.table.name" = "customer");
+
+-- hive 2 hbase;
+CREATE TABLE grades_hbase (course string, year int, term string, credits int, letter string) 
+STORED BY 'org.apache.hadoop.hive.hbase.HBaseStorageHandler'
+WITH SERDEPROPERTIES ("hbase.columns.mapping" = ":key, g:year, g:term, g:credits, g:letter")
+TBLPROPERTIES ("hbase.table.name"="grades")
+
+-- insert date
+insert into grades_hbase select course,year, term ,credits, letter from grades;
+ 
+
 
 
 
