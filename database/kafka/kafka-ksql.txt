@@ -75,6 +75,7 @@ select os, count(user) as number_of_users from weblogs window tumbling(size 60 s
 
 select location, count(*) from atm window hopping(size 30 seconds, advance by 15 seconds) group by location;
 
+select location, count(*) as err_count from atm window session (4 hours) where status='ok' group by location having count(*) > 2;
 
 
 
