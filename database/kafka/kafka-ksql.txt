@@ -1,0 +1,84 @@
+Kafka is open source / live streaming of data / real time data analytics /
+
+## Producer
+## create topic
+kafka-topics --zookeeper zookeeper:2181 --create --topic test --replication-factor 1 --partitions 1
+
+## send somthing to the topic
+kafka-console-producer --broker-list localhost:9092 --topic test
+
+
+## consumer / get topic using the console
+kafka-console-consumer --bootstrap-server localhost:9092 --topic test
+
+## Kafka Data Stream / ksql
+## create stream
+CREATE STREAM browsers (browser varchar) with (kafka_topic='weblogs', value_format='json');
+# select 
+SELECT * from browsers limit 10;
+
+
+## BASIC COMMANDS
+show topics;
+show streams;
+create stream;
+describe;
+drop stream;
+
+
+## Example create stream
+CREATE STREAM atm_amonts (user varchar, amount double) with ( kafka_topic='users, value_format='json');
+
+## KAFKA DATA TYPE AND PROPERTIES
+
+Data type      		Properties
+Boolean			kafka_topic
+interger(4 bytes)	value_format(JSON | DELIMITED)
+bigint			timestamp
+double			key
+varchar
+
+
+## CREATE STREAM WITH timestamp properties
+CREATE STREAM weblogs (timestamp bigint,browser varchar, OS varchar, uri varchar, user varchar ) 
+with (kafka_topic='weblogs', value_format='json', timestamp='Timestamp');
+
+
+## Persistent queries
+create stream as select ...
+
+# query
+select * from weblogs where uri = '/';
+
+# persistence query
+create stream homepage as select * from weblogs where uri = '/';
+
+## Aggregate Queries
+select select_eprt [,...]
+from from_item 
+	[window window_expression]
+	[where condition]
+	[group by grouping_expresion]
+	[having having_expression]
+	[limit n];
+
+# query
+select concat(user, concat('-', location) ) from atm;
+select timestamp, timestamptostring(timestamp, 'mm') from atm;
+select timestamp, timestamptostring(timestamp, 'hh:mm:ss') from atm;
+select user, location, amount, timestamptostring(timestamp, 'yyyy-MM-dd hh:mm:ss') where cast(timestamptostring(timestamp, 'ss')as bigint)  >30;
+
+# window in ksql
+# tumbling | hopping | sessiuon
+
+select os, count(user) as number_of_users from weblogs window tumbling(size 60 seconds) group by os;
+
+select location, count(*) from atm window hopping(size 30 seconds, advance by 15 seconds) group by location;
+
+
+
+
+
+
+
+

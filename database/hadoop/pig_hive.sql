@@ -176,13 +176,24 @@ insert into grades_hbase select course,year, term ,credits, letter from grades;
 
 
 
+ dcc.Dropdown(id='stock_picker',options=options, value=['TSLA'],multi=True 
+    , style={
+        'display':'inline-block', 'verticalAlign':'top', 'width':'30%'
+    })
 
 
+, style={
+    'backgroundColor':'#01BEFF'
+    
+}
 
 
-
-
-
+------------------------------------------
+--Cassandra
+CREATE KEYSPACE keyspace_name WITH REPLICATION = {
+		 'class': 'SimpleStratergy',
+		'replication_factor': number	
+		};
 
 
 
