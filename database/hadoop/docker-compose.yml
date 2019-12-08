@@ -10,7 +10,8 @@ services:
     ports:
       - "8888:8888" #Hue
       - "7180:7180" # Cloudera Manager
-      - "8080:80" #Tutotial
+      #- "8080:80" #Tutotial
+      - "7777:80"
     entrypoint: /usr/bin/docker-quickstart
     volumes:
       - cloudera-data:/var/lib
